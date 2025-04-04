@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
+# Hàm hiển thị ảnh đa năng 
 def display_image(image=None, images=None, folder_path=None):
     """
     Hiển thị ảnh hoặc nhiều ảnh từ đối tượng đã load, đường dẫn, hoặc folder.
