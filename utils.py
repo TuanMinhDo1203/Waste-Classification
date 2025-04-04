@@ -74,3 +74,61 @@ def display_image(image=None, images=None, folder_path=None):
                 ax.axis('off')  # Ẩn các subplot dư thừa
         plt.tight_layout()
         plt.show()
+
+# Hàm Load ảnh từ đường dẫn
+def load_image(path):
+    """
+    Load một ảnh từ đường dẫn và trả về dưới dạng NumPy array.
+    
+    Parameters:
+        path (str): Đường dẫn đến ảnh.
+    
+    Returns:
+        numpy.ndarray: Ảnh dưới dạng mảng.
+    
+    Raises:
+        FileNotFoundError: Nếu file không tồn tại.
+        ValueError: Nếu không thể mở file.
+    """
+    try:
+        with Image.open(path) as img:
+            return np.array(img)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Không tìm thấy file: {path}")
+    except Exception as e:
+        raise ValueError(f"Lỗi khi load ảnh: {e}")
+
+# Hàm Load ảnh từ thư mục
+
+def load_images_from_folder(folder_path, extensions=(".jpg", ".jpeg", ".png")):
+    """
+    Load tất cả ảnh từ thư mục và trả về danh sách NumPy array.
+    
+    Parameters:
+        folder_path (str): Đường dẫn đến thư mục chứa ảnh.
+        extensions (tuple): Các đuôi file ảnh hợp lệ (mặc định: jpg, jpeg, png).
+    
+    Returns:
+        list[numpy.ndarray]: Danh sách ảnh dưới dạng mảng NumPy.
+    
+    Raises:
+        FileNotFoundError: Nếu thư mục không tồn tại.
+        ValueError: Nếu không có ảnh hợp lệ trong thư mục.
+    """
+    if not os.path.isdir(folder_path):
+        raise FileNotFoundError(f"Thư mục không tồn tại: {folder_path}")
+
+    image_list = []
+    for filename in sorted(os.listdir(folder_path)):  # Load theo thứ tự tên file
+        if filename.lower().endswith(extensions):
+            img_path = os.path.join(folder_path, filename)
+            try:
+                image = load_image(img_path)
+                image_list.append(image)
+            except Exception as e:
+                print(f"⚠ Không thể load {filename}: {e}")
+
+    if not image_list:
+        raise ValueError(f"Không có ảnh hợp lệ trong thư mục: {folder_path}")
+
+    return image_list
